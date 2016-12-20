@@ -50,6 +50,6 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return "Card [suit=" + suit + ", rank=" + rank + "]";
+		return "Card [suit=" + suit + ", rank=" + rank + "]\n";
 	}
 }

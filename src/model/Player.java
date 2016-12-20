@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -8,6 +9,7 @@ public class Player {
 	
 	public Player(String name) {
 		this.name = name;
+		this.hand = new ArrayList<Card>();
 	}
 
 	public String getName() {
@@ -24,5 +26,10 @@ public class Player {
 	
 	public Card playCard(Card c) {
 		return this.hand.remove(this.hand.indexOf(c));
+	}
+
+	@Override
+	public String toString() {
+		return "Player [name=" + name + ", hand=" + hand + "]\n";
 	}
 }

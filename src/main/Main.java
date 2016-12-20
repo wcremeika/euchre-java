@@ -1,6 +1,5 @@
 package main;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
@@ -16,26 +15,29 @@ public class Main {
 	public static void main(String[] args) {
 		Player wes = new Player("Wes");
 		Player casey = new Player("Casey");
-		Team one = new Team(wes,casey);
+		Team one = new Team();
+		one.addPlayer(wes);
+		one.addPlayer(casey);
 		
 		Player alice = new Player("Alice");
 		Player billy = new Player("Billy");
-		Team two = new Team(alice,billy);
+		Team two = new Team();
+		two.addPlayer(alice);
+		two.addPlayer(billy);
 		
-		GameManager.setTeams(one,two);
+		GameManager.addTeam(one);
+		GameManager.addTeam(two);
 		GameManager.dealCards();
 	}
 }
 
 class GameManager {
-	private static Team teamOne;
-	private static Team teamTwo;
+	private static List<Team> teams = new ArrayList<Team>();
 	private static Suit trump;
 	private static Stack<Card> deck = new Stack<Card>();
 	
-	public static void setTeams(Team t1, Team t2) {
-		teamOne = t1;
-		teamTwo = t2;
+	public static void addTeam(Team t) {
+		teams.add(t);
 	}
 
 	public static void setTrump(Suit t) {
@@ -50,8 +52,24 @@ class GameManager {
 			}
 		}
 		
+//		System.out.println(deck);
 		Collections.shuffle(deck);
 //		System.out.println(deck);
+		int ctr = 3;
+		int teamCounter = 0;
+		int playerCounter = 0;
+		for (int i = 0; i < 20; i+=ctr) {
+			for(int j=0; j < ctr;j++) {
+				teams.get(teamCounter%teams.size()).getPlayers().get(playerCounter%teams.size()).addCardToHand(deck.pop());
+			}
+			
+			teamCounter = (teamCounter + 1) % 2;
+			playerCounter ^= teamCounter;
+			ctr = (ctr == 3) ?  2 : 3;
+		}
+		
+		System.out.println(deck);
+		System.out.println(teams);
 	}
 	
 	public static int compare(Card c1, Card c2) {

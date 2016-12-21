@@ -74,14 +74,24 @@ public class EuchreTable extends Table {
 
 	public void chooseTrump() {
 		Card potentialTrump = deck.pop();
-		Player currentPlayer = players.get(dealerPosition+1);
+		int currentPosition = dealerPosition + 1;
 		int playerChoice = (int) Math.floor(Math.random() * 2);
 		
-		System.out.println("choice:" + playerChoice);
-		
-		if (TrumpDecision.values()[playerChoice] == TrumpDecision.PICKUP) {
-			
+		while(TrumpDecision.values()[playerChoice] == TrumpDecision.PASS && currentPosition < players.size() * 2) {
+			currentPosition++;
+			System.out.println("pass");
+			playerChoice = (int) Math.floor(Math.random() * 2);
 		}
+		
+		if (currentPosition == players.size() * 2) {
+			System.out.println("no one chose anything");
+		}
+		
+		System.out.println("pickup\n");
+		Player dealer = players.get(dealerPosition);
+		dealer.addCardToHand(potentialTrump);
+		this.deck.push(dealer.removeCardFromHand(potentialTrump));
+		this.trump = potentialTrump.getSuit();
 	}
 }
 

@@ -31,6 +31,10 @@ public class Team {
 	public void setScore(int score) {
 		this.score = score;
 	}
+	
+	public boolean hasPlayer(Player p) {
+		return players.contains(p);
+	}
 
 	@Override
 	public String toString() {

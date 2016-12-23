@@ -14,6 +14,8 @@ public class EuchreTable extends Table {
 	private List<Team> teams = new ArrayList<Team>();
 	private Stack<Card> deck = new Stack<Card>();
 	
+	private final int PASS = 0;
+	
 	public void addTeam(Team t) {
 		teams.add(t);
 		players.addAll(t.getPlayers());
@@ -50,6 +52,55 @@ public class EuchreTable extends Table {
 		Collections.shuffle(deck);
 	}
 	
+	public void callTrumpFromKitty() {
+		Card potentialTrump = deck.pop();
+		int currentPosition = lastPlayerToCall();
+		
+		if (currentPosition == players.size()) {
+			playersCallTrump(potentialTrump.getSuit());
+		}
+		else {
+			System.out.println("pickup\n");
+			Player dealer = players.get(dealerPosition);
+			dealer.addCardToHand(potentialTrump);
+			this.deck.push(dealer.removeCardFromHand(potentialTrump));
+			this.trump = potentialTrump.getSuit();
+		}
+	}
+	
+	public void playersCallTrump(Suit dismissedTrump) {
+		System.out.println("no one picked up");
+		int currentPosition = lastPlayerToCall();
+		Suit newTrump = Suit.values()[(int) Math.floor(Math.random() * 4)];
+		
+		while (newTrump == dismissedTrump) {
+			newTrump = Suit.values()[(int) Math.floor(Math.random() * 4)];
+		}
+		
+		System.out.println(newTrump);
+		int trumpTeam = 0;
+		
+		for (Team team : teams) {
+			if (team.hasPlayer(players.get(currentPosition%4))) {
+				trumpTeam = this.teams.indexOf(team);
+			}
+		}
+		
+		System.out.println(trumpTeam);
+	}
+	
+	public int lastPlayerToCall() {
+		int currentPosition = 0;
+		int playerChoice = (int) Math.floor(Math.random() * 2);
+		
+		while(playerChoice == PASS && currentPosition < players.size()) {
+			currentPosition++;
+			playerChoice = (int) Math.floor(Math.random() * 2); 
+		}
+		
+		return currentPosition;
+	}
+	
 	public int compare(Card c1, Card c2) {
 		if (isTrump(c1) && isTrump(c2)) {
 			return EuchreComparator.compare(c1, c2);
@@ -71,31 +122,9 @@ public class EuchreTable extends Table {
 		return c.getSuit() == trump ||
 				(c.getRank() == Rank.JACK && opposite == trump);
 	}
-
-	public void chooseTrump() {
-		Card potentialTrump = deck.pop();
-		int currentPosition = dealerPosition + 1;
-		int playerChoice = (int) Math.floor(Math.random() * 2);
-		
-		while(TrumpDecision.values()[playerChoice] == TrumpDecision.PASS && currentPosition < players.size() * 2) {
-			currentPosition++;
-			System.out.println("pass");
-			playerChoice = (int) Math.floor(Math.random() * 2);
-		}
-		
-		if (currentPosition == players.size() * 2) {
-			System.out.println("no one chose anything");
-		}
-		
-		System.out.println("pickup\n");
-		Player dealer = players.get(dealerPosition);
-		dealer.addCardToHand(potentialTrump);
-		this.deck.push(dealer.removeCardFromHand(potentialTrump));
-		this.trump = potentialTrump.getSuit();
-	}
 }
 
-enum TrumpDecision {
+enum PlayerChoice {
 	PASS,
 	PICKUP;
 }

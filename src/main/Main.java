@@ -24,6 +24,6 @@ public class Main {
 		table.addTeam(two);
 		table.dealCards();
 		// choose trump
-		table.chooseTrump();
+		table.callTrumpFromKitty();
 	}
 }

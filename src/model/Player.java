@@ -35,7 +35,7 @@ public class Player {
 		int random = (int) Math.floor(Math.random()*Suit.values().length);
 		Suit s = Suit.values()[random];
 		
-		while (s == c.getSuit() && !this.hand.containsKey(s)) {
+		while (s == c.getSuit() || !this.hand.containsKey(s)) {
 			random = (int) Math.floor(Math.random()*Suit.values().length);
 			s = Suit.values()[random];
 		}
